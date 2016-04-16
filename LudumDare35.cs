@@ -11,6 +11,14 @@ namespace MrPhilGames
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D bear;
+        Texture2D man;
+
+        Texture2D player;
+        Vector2 playerPosition;
+        bool transforming = true;
+        double transformTimer;
+
 
         public LudumDare35()
         {
@@ -41,6 +49,10 @@ namespace MrPhilGames
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            bear = Content.Load<Texture2D>("bear");
+            playerPosition = new Vector2(100, 100);
+
+            player = man = Content.Load<Texture2D>("man");
         }
 
         /// <summary>
@@ -62,7 +74,49 @@ namespace MrPhilGames
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            // Update timers
+            if (transforming)
+            {
+                if (transformTimer < gameTime.TotalGameTime.TotalSeconds)
+                {
+                    transforming = false;
+                }
+            }
+
             // TODO: Add your update logic here
+            KeyboardState keyboard = Keyboard.GetState();
+
+            if (keyboard.IsKeyDown(Keys.A))
+            {
+                playerPosition.X += -1;
+            }
+            if (keyboard.IsKeyDown(Keys.D))
+            {
+                playerPosition.X += 1;
+            }
+            if (keyboard.IsKeyDown(Keys.W))
+            {
+                playerPosition.Y += -1;
+            }
+            if (keyboard.IsKeyDown(Keys.S))
+            {
+                playerPosition.Y += 1;
+            }
+            if (keyboard.IsKeyDown(Keys.X) &&
+                transforming == false )
+            {
+                transforming = true;
+                transformTimer = gameTime.TotalGameTime.TotalSeconds + 1.0;
+
+                if (player == man)
+                {
+                    player = bear;
+                }
+                else
+                {
+                    player = man;
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -76,6 +130,10 @@ namespace MrPhilGames
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.Draw(player, playerPosition, Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
