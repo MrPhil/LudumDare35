@@ -104,6 +104,13 @@ namespace MrPhilGames
             }
 
             // TODO: Add your update logic here
+            if (transforming == false &&
+                groundTiles[0, 0].PositionAsRect.Contains(playerPosition))
+            {
+                StartPlayerTransformation(gameTime);
+            }
+
+
             KeyboardState keyboard = Keyboard.GetState();
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
@@ -130,22 +137,12 @@ namespace MrPhilGames
             if (keyboard.IsKeyDown(Keys.X) &&
                 transforming == false )
             {
-                transforming = true;
-                transformTimer = gameTime.TotalGameTime.TotalSeconds + 1.0;
-
-                if (player == man)
-                {
-                    player = bear;
-                }
-                else
-                {
-                    player = man;
-                }
+                StartPlayerTransformation(gameTime);
             }
 
             base.Update(gameTime);
         }
-
+ 
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -174,6 +171,21 @@ namespace MrPhilGames
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void StartPlayerTransformation(GameTime gameTime)
+        {
+            transforming = true;
+            transformTimer = gameTime.TotalGameTime.TotalSeconds + 1.0;
+
+            if (player == man)
+            {
+                player = bear;
+            }
+            else
+            {
+                player = man;
+            }
         }
     }
 }
