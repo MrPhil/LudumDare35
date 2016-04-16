@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MrPhilGames
 {
@@ -10,19 +11,30 @@ namespace MrPhilGames
     public class LudumDare35 : Game
     {
         GraphicsDeviceManager graphics;
+        const int Width = 800;
+        const int Height = 600;
+
+        GroundTile[,] groundTiles = new GroundTile[Width, Height];
+
         SpriteBatch spriteBatch;
         Texture2D bear;
         Texture2D man;
+        Texture2D grass;
 
         Texture2D player;
         Vector2 playerPosition;
         bool transforming = true;
         double transformTimer;
 
+        Random random = new Random((int)(1972 * DateTime.Now.Ticks));
 
         public LudumDare35()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = Width;
+            graphics.PreferredBackBufferHeight = Height;
+            graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
         }
 
@@ -35,6 +47,7 @@ namespace MrPhilGames
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            playerPosition = new Vector2(100, 100);
 
             base.Initialize();
         }
@@ -50,9 +63,19 @@ namespace MrPhilGames
 
             // TODO: use this.Content to load your game content here
             bear = Content.Load<Texture2D>("bear");
-            playerPosition = new Vector2(100, 100);
-
             player = man = Content.Load<Texture2D>("man");
+            grass = Content.Load<Texture2D>("grass");
+
+            GroundTile groundTile;
+            for (int x = 0; x < Width; x += 32)
+            {
+                for (int y = 0; y < Height; y += 32)
+                {
+                    groundTile = groundTiles[x, y] = new GroundTile(x, y);
+                    groundTile.Texture = grass;
+                    groundTile.Lit = random.Next(5) < 4;
+                }
+            }
         }
 
         /// <summary>
@@ -71,9 +94,6 @@ namespace MrPhilGames
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             // Update timers
             if (transforming)
             {
@@ -86,6 +106,11 @@ namespace MrPhilGames
             // TODO: Add your update logic here
             KeyboardState keyboard = Keyboard.GetState();
 
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                keyboard.IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
             if (keyboard.IsKeyDown(Keys.A))
             {
                 playerPosition.X += -1;
@@ -131,6 +156,19 @@ namespace MrPhilGames
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+
+            // Grass first
+            GroundTile groundTile;
+            for (int x = 0; x < Width; x += 32)
+            {
+                for (int y = 0; y < Height; y += 32)
+                {
+                    groundTile = groundTiles[x, y];
+                    spriteBatch.Draw( groundTile.Texture, groundTile.Position,
+                        groundTile.Lit ? Color.White : Color.Gray);
+                }
+            }
+
             spriteBatch.Draw(player, playerPosition, Color.White);
 
             spriteBatch.End();
