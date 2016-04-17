@@ -8,15 +8,6 @@ public class Player : MonoBehaviour
     public Sprite man;
     public Sprite bear;
 
-    Vector2 currentTarget;
-    bool isAtTarget;
-
-    bool isTransforming;
-    float transformTimer;
-
-    private bool IsFacingRight = true;
-    private Animator anim;
-
     public bool IsMan
     {
         get
@@ -34,18 +25,32 @@ public class Player : MonoBehaviour
         }
     }
 
+    private bool shouldBeABear = false;
+
+    Vector2 currentTarget;
+    bool isAtTarget;
+
+    bool isTransforming;
+    float transformTimer;
+
+    private bool IsFacingRight = true;
+    private Animator anim;
+
+
     // Use this for initialization
     void Start()
     {
         anim = GetComponent<Animator>();
+
+        StartCoroutine(Transformer());
     }
 
     void FixedUpdate()
     {
-        if (isTransforming == false &&
+        if (Application.isEditor &&
             Input.GetKeyDown(KeyCode.X))
         {
-            StartPlayerTransformation();
+            shouldBeABear = !shouldBeABear;
         }
 
         float moveX = Input.GetAxis("Horizontal");
@@ -64,11 +69,11 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("OnTriggerEnter");
+        Debug.Log("OnTriggerEnter2D");
 
-        if (!isTransforming && other.tag == "Light")
+        if (other.tag == "Light")
         {
-            TransformToBear();
+            shouldBeABear = true;
         }
     }
 
@@ -76,9 +81,9 @@ public class Player : MonoBehaviour
     {
         Debug.Log("OnTriggerExit");
 
-        if (!isTransforming && other.tag == "Light")
+        if (other.tag == "Light")
         {
-            TransformToMan();
+            shouldBeABear = false;
         }
     }
 
@@ -96,34 +101,58 @@ public class Player : MonoBehaviour
         transform.localScale = theScale;
     }
 
-    private void TransformToBear()
+    private IEnumerator Transformer()
     {
+        while (Global.Instance.IsPlaying)
+        {
+            yield return null;
+
+            if (shouldBeABear)
+            {
+                yield return TransformToBear();
+            }
+            else
+            {
+                yield return TransformToMan();
+            }
+        }
+    }
+
+    private IEnumerator TransformToBear()
+    {
+        while (isTransforming)
+        {
+            yield return null;
+        }
+
         if (IsMan)
         {
-            StartPlayerTransformation();
+            isTransforming = true;
+
+            anim.SetTrigger("TransformToBear");
+
+            yield return new WaitForSeconds(1.0f);
+
+            isTransforming = false;
         }
     }
 
-    private void TransformToMan()
+    private IEnumerator TransformToMan()
     {
+        while (isTransforming)
+        {
+            yield return null;
+        }
+
         if (!IsMan)
         {
-            StartPlayerTransformation();
+            isTransforming = true;
+
+            anim.SetTrigger("TransformToMan");
+
+            yield return new WaitForSeconds(1.0f);
+
+            isTransforming = false;
         }
-    }
-
-    private void StartPlayerTransformation()
-    {
-        isTransforming = true;
-
-        anim.SetTrigger("Transform");
-
-        StartCoroutine(BlockTranforming(1.0f));
-    }
-
-    private IEnumerator BlockTranforming(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        isTransforming = false;
     }
 }
