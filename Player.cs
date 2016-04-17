@@ -3,22 +3,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MrPhilGames
 {
-    public class GroundTile
+    public class Player
     {
+        public Texture2D Texture;
         public Vector2 Position;
         public Rectangle PositionAsRect
         {
             get
             {
-                return new Rectangle(Position.ToPoint(), Global.TileSize);
+                return new Rectangle(Position.ToPoint(), Program.TileSize);
             }
         }
-        public Texture2D Texture;
-        public bool Lit = true;
 
-        public GroundTile(int x, int y)
+        public bool IsMan
         {
-            Position = new Vector2(x, y);
+            get
+            {
+                return Texture == Program.game.man;
+            }
         }
     }
 }

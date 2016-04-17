@@ -18,11 +18,10 @@ namespace MrPhilGames
 
         SpriteBatch spriteBatch;
         Texture2D bear;
-        Texture2D man;
+        public Texture2D man;
         Texture2D grass;
 
-        Texture2D player;
-        Vector2 playerPosition;
+        public Player player;
         bool transforming = true;
         double transformTimer;
 
@@ -47,7 +46,10 @@ namespace MrPhilGames
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            playerPosition = new Vector2(100, 100);
+            player = new Player();
+            player.Position = new Vector2(100, 100);
+            Global.Pixel = new Texture2D(graphics, 1, 1);
+            Global.Pixel.SetData<Color>(new Color[] { Color.White });// fill the texture with white
 
             base.Initialize();
         }
@@ -63,7 +65,7 @@ namespace MrPhilGames
 
             // TODO: use this.Content to load your game content here
             bear = Content.Load<Texture2D>("bear");
-            player = man = Content.Load<Texture2D>("man");
+            player.Texture = man = Content.Load<Texture2D>("man");
             grass = Content.Load<Texture2D>("grass");
 
             GroundTile groundTile;
@@ -104,11 +106,28 @@ namespace MrPhilGames
             }
 
             // TODO: Add your update logic here
-            if (transforming == false &&
-                groundTiles[0, 0].PositionAsRect.Contains(playerPosition))
+
+            // Did we step into the light (and vica-versa?)
+            if (transforming == false)
             {
-                StartPlayerTransformation(gameTime);
+                // TODO: MAybe Optimize around the player's position?
+                GroundTile groundTile;
+                for (int x = 0; x < Width; x += 32)
+                {
+                    for (int y = 0; y < Height; y += 32)
+                    {
+                        groundTile = groundTiles[x, y];
+
+                        if (groundTile.PositionAsRect.Intersects(player.PositionAsRect) &&
+                            ((player.IsMan && !groundTile.Lit) ||
+                            (!player.IsMan && groundTile.Lit)))
+                        {
+                            StartPlayerTransformation(gameTime);
+                        }
+                    }
+                }
             }
+
 
 
             KeyboardState keyboard = Keyboard.GetState();
@@ -120,29 +139,29 @@ namespace MrPhilGames
             }
             if (keyboard.IsKeyDown(Keys.A))
             {
-                playerPosition.X += -1;
+                player.Position.X += -1;
             }
             if (keyboard.IsKeyDown(Keys.D))
             {
-                playerPosition.X += 1;
+                player.Position.X += 1;
             }
             if (keyboard.IsKeyDown(Keys.W))
             {
-                playerPosition.Y += -1;
+                player.Position.Y += -1;
             }
             if (keyboard.IsKeyDown(Keys.S))
             {
-                playerPosition.Y += 1;
+                player.Position.Y += 1;
             }
             if (keyboard.IsKeyDown(Keys.X) &&
-                transforming == false )
+                transforming == false)
             {
                 StartPlayerTransformation(gameTime);
             }
 
             base.Update(gameTime);
         }
- 
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -161,12 +180,12 @@ namespace MrPhilGames
                 for (int y = 0; y < Height; y += 32)
                 {
                     groundTile = groundTiles[x, y];
-                    spriteBatch.Draw( groundTile.Texture, groundTile.Position,
+                    spriteBatch.Draw(groundTile.Texture, groundTile.Position,
                         groundTile.Lit ? Color.White : Color.Gray);
                 }
             }
 
-            spriteBatch.Draw(player, playerPosition, Color.White);
+            spriteBatch.Draw(player.Texture, player.Position, Color.White);
 
             spriteBatch.End();
 
@@ -178,13 +197,13 @@ namespace MrPhilGames
             transforming = true;
             transformTimer = gameTime.TotalGameTime.TotalSeconds + 1.0;
 
-            if (player == man)
+            if (player.Texture == man)
             {
-                player = bear;
+                player.Texture = bear;
             }
             else
             {
-                player = man;
+                player.Texture = man;
             }
         }
     }
