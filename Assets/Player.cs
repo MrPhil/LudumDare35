@@ -80,6 +80,8 @@ public class Player : MonoBehaviour
             GetComponent<SpriteRenderer>().sprite = man;
         }
 
+        anim.SetTrigger("Transform");
+
         StartCoroutine(BlockTranforming(1.0f));
     }
 

@@ -1,9 +1,14 @@
 fileFormatVersion: 2
 guid: e3a35f500f958ca479e3f5d31b3bf399
-timeCreated: 1460860657
+timeCreated: 1460876494
 licenseType: Pro
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: Man_0
+    21300002: Man_1
+    21300004: Man_2
+    21300006: Man_3
+    21300008: Man_4
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -30,7 +35,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 16
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -38,7 +43,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -49,7 +54,80 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: Man_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 66
+        width: 44
+        height: 56
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -20, y: 28}
+        - {x: -22, y: 27}
+        - {x: -22, y: 8}
+        - {x: -14, y: -28}
+        - {x: 22, y: -28}
+        - {x: 22, y: 26}
+        - {x: 20, y: 28}
+    - name: Man_1
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 66
+        width: 43
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -20.5, y: 29}
+        - {x: -21.5, y: 26}
+        - {x: -21.5, y: -9}
+        - {x: -14.5, y: -29}
+        - {x: 20.5, y: -29}
+        - {x: 21.5, y: -25}
+        - {x: 21.5, y: 29}
+    - name: Man_3
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 0
+        width: 44
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -22, y: 10}
+        - {x: -21, y: 3}
+        - {x: -11, y: -29}
+        - {x: 22, y: -29}
+        - {x: 22, y: 25}
+        - {x: 19, y: 29}
+        - {x: -19, y: 29}
+        - {x: -22, y: 27}
+    - name: Man_4
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 2
+        width: 44
+        height: 56
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -20, y: 28}
+        - {x: -22, y: 27}
+        - {x: -22, y: 8}
+        - {x: -14, y: -28}
+        - {x: 22, y: -28}
+        - {x: 22, y: 26}
+        - {x: 20, y: 28}
     outline: []
   spritePackingTag: 
   userData: 
