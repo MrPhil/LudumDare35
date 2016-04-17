@@ -21,7 +21,16 @@ public class Player : MonoBehaviour
     {
         get
         {
-            return GetComponent<SpriteRenderer>().sprite == man; ;
+            AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(0);
+
+            if (state.IsName("ManIdle") || state.IsName("ManWalk"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
@@ -53,6 +62,26 @@ public class Player : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("OnTriggerEnter");
+
+        if (!isTransforming && other.tag == "Light")
+        {
+            TransformToBear();
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        Debug.Log("OnTriggerExit");
+
+        if (!isTransforming && other.tag == "Light")
+        {
+            TransformToMan();
+        }
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         currentTarget = eventData.position;
@@ -67,18 +96,25 @@ public class Player : MonoBehaviour
         transform.localScale = theScale;
     }
 
+    private void TransformToBear()
+    {
+        if (IsMan)
+        {
+            StartPlayerTransformation();
+        }
+    }
+
+    private void TransformToMan()
+    {
+        if (!IsMan)
+        {
+            StartPlayerTransformation();
+        }
+    }
+
     private void StartPlayerTransformation()
     {
         isTransforming = true;
-
-        if (IsMan)
-        {
-            GetComponent<SpriteRenderer>().sprite = bear;
-        }
-        else
-        {
-            GetComponent<SpriteRenderer>().sprite = man;
-        }
 
         anim.SetTrigger("Transform");
 
