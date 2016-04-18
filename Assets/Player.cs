@@ -28,14 +28,11 @@ public class Player : MonoBehaviour
     private bool shouldBeABear = false;
 
     Vector2 currentTarget;
-    bool isAtTarget;
 
     bool isTransforming;
-    float transformTimer;
 
     private bool IsFacingRight = true;
     private Animator anim;
-
 
     // Use this for initialization
     void Start()
@@ -53,12 +50,48 @@ public class Player : MonoBehaviour
             shouldBeABear = !shouldBeABear;
         }
 
-        float moveX = Input.GetAxis("Horizontal");
-        float moveY = Input.GetAxis("Vertical");
+        float moveX = 0;
+        float moveY = 0;
 
-        anim.SetFloat("Speed", Mathf.Abs(moveX));
+        if (isTransforming)
+        {
+        }
+        else if (IsMan)
+        {
+            moveX = Input.GetAxis("Horizontal");
+            moveY = Input.GetAxis("Vertical");
+        }
+        else
+        {
+            moveX = Random.Range(-MaxSpeed, MaxSpeed);
+            moveY = Random.Range(-MaxSpeed, MaxSpeed);
+        }
 
         GetComponent<Rigidbody2D>().velocity = new Vector2(moveX * MaxSpeed, moveY * MaxSpeed);
+
+        if (transform.position.x > 1.7)
+        {
+            moveX = 0;
+            transform.position = new Vector3(1.7f, transform.position.y, transform.position.z);
+        }
+        else if (transform.position.x < -1.7)
+        {
+            moveX = 0;
+            transform.position = new Vector3(-1.7f, transform.position.y, transform.position.z);
+        }
+
+        if (transform.position.y > 2.88)
+        {
+            moveY = 0;
+            transform.position = new Vector3(transform.position.x, 2.88f, transform.position.z);
+        }
+        else if (transform.position.y < -1.9)
+        {
+            moveY = 0;
+            transform.position = new Vector3(transform.position.x, -1.9f, transform.position.z);
+        }
+
+        anim.SetFloat("Speed", Mathf.Abs(moveX));
 
         if ((moveX > 0 && !IsFacingRight) ||
             (moveX < 0 && IsFacingRight))
@@ -85,12 +118,6 @@ public class Player : MonoBehaviour
         {
             shouldBeABear = false;
         }
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        currentTarget = eventData.position;
-        isAtTarget = false;
     }
 
     private void Flip()
