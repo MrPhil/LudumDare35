@@ -11,6 +11,7 @@ public class Global
     }
 
     public bool IsPlaying = true;
+    public float PlayerMaxSpeed = 3.0f;
 
     private static Object thisLock = new Object();
 

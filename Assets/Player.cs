@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
     public Sprite man;
     public Sprite bear;
 
+    private float TRANSFORM_WAIT_TIME = 0.5f;
+
     public bool IsMan
     {
         get
@@ -27,8 +29,6 @@ public class Player : MonoBehaviour
 
     private bool shouldBeABear = false;
 
-    Vector2 currentTarget;
-
     bool isTransforming;
 
     private bool IsFacingRight = true;
@@ -37,6 +37,8 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        MaxSpeed = Global.Instance.PlayerMaxSpeed;
+
         anim = GetComponent<Animator>();
 
         StartCoroutine(Transformer());
@@ -91,7 +93,7 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(transform.position.x, -1.9f, transform.position.z);
         }
 
-        anim.SetFloat("Speed", Mathf.Abs(moveX));
+        anim.SetFloat("Speed", Mathf.Max(Mathf.Abs(moveX), Mathf.Abs(moveY)));
 
         if ((moveX > 0 && !IsFacingRight) ||
             (moveX < 0 && IsFacingRight))
@@ -158,7 +160,7 @@ public class Player : MonoBehaviour
 
             anim.SetTrigger("TransformToBear");
 
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(TRANSFORM_WAIT_TIME);
 
             isTransforming = false;
         }
@@ -177,7 +179,7 @@ public class Player : MonoBehaviour
 
             anim.SetTrigger("TransformToMan");
 
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(TRANSFORM_WAIT_TIME);
 
             isTransforming = false;
         }
