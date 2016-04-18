@@ -13,9 +13,8 @@ public class NextLevel : MonoBehaviour
         {
             if (IsQuit || SceneManager.sceneCountInBuildSettings < NextLevelIndex)
             {
-                Global.Instance.IsPlaying = false;
-                Application.Quit();
-                Debug.Log("QUIT!");
+
+                SceneManager.LoadScene("Level999-Goodbye", LoadSceneMode.Single);
             }
             else
             {
